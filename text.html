@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Login + Kalkulator Khusus</title>
+  <style>
+    body {
+      font-family: -apple-system, sans-serif;
+      background: #f1f2f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 340px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    #calculator, #halamanSpesial {
+      display: none;
+    }
+
+    .screen {
+      width: 100%;
+      background: #dcdde1;
+      color: black;
+      text-align: right;
+      font-size: 32px;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 20px;
+      font-size: 20px;
+      border: none;
+      border-radius: 50%;
+      background: #f1f2f6;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn:active {
+      background: #dcdde1;
+    }
+
+    .btn.operator {
+      background: #ff9500;
+      color: white;
+    }
+
+    .btn.equal {
+      background: #34c759;
+      color: white;
+      grid-column: span 2;
+      border-radius: 30px;
+    }
+
+    .btn.zero {
+      grid-column: span 2;
+      border-radius: 30px;
+    }
+
+    button.login-btn {
+      background: #007aff;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 16px;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    #halamanSpesial {
+      text-align: center;
+      font-size: 24px;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Login -->
+    <div id="loginForm">
+      <h2>Login</h2>
+      <input type="text" id="username" placeholder="Username">
+      <input type="password" id="password" placeholder="Password">
+      <button class="login-btn" onclick="login()">Login</button>
+      <div class="error" id="loginError"></div>
+    </div>
+
+    <!-- Kalkulator -->
+    <div id="calculator">
+      <h2>Kalkulator iOS</h2>
+      <div class="screen" id="screen">0</div>
+      <div class="buttons">
+        <button class="btn" onclick="clearScreen()">C</button>
+        <button class="btn" onclick="append('%')">%</button>
+        <button class="btn" onclick="backspace()">⌫</button>
+        <button class="btn operator" onclick="append('/')">÷</button>
+
+        <button class="btn" onclick="append('7')">7</button>
+        <button class="btn" onclick="append('8')">8</button>
+        <button class="btn" onclick="append('9')">9</button>
+        <button class="btn operator" onclick="append('*')">×</button>
+
+        <button class="btn" onclick="append('4')">4</button>
+        <button class="btn" onclick="append('5')">5</button>
+        <button class="btn" onclick="append('6')">6</button>
+        <button class="btn operator" onclick="append('-')">−</button>
+
+        <button class="btn" onclick="append('1')">1</button>
+        <button class="btn" onclick="append('2')">2</button>
+        <button class="btn" onclick="append('3')">3</button>
+        <button class="btn operator" onclick="append('+')">+</button>
+
+        <button class="btn zero" onclick="append('0')">0</button>
+        <button class="btn" onclick="append('.')">.</button>
+        <button class="btn equal" onclick="calculate()">=</button>
+      </div>
+    </div>
+
+    <!-- Halaman Spesial -->
+<!-- Halaman Spesial -->
+<div id="halamanSpesial">
+  <h2>Hai, yg dibawah ini adalah aku🤭😹</h2>
+  <img src="oyi.jpg" alt="Gambar lucu" style="max-width: 100%; border-radius: 12px; margin-top: 15px;" />
+  
+  <!-- Musik otomatis -->
+  <audio autoplay hidden>
+    <source src="akuoyi.mp3" type="audio/mpeg">
+    Browser kamu tidak mendukung audio.
+  </audio>
+</div>
+        
+    </div>
+  </div>
+
+  <script>
+    const validUser = {
+      username: "oyi",
+      password: "oyi"
+    };
+
+    function login() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      const errorDiv = document.getElementById("loginError");
+
+      if (user === validUser.username && pass === validUser.password) {
+        document.getElementById("loginForm").style.display = "none";
+        document.getElementById("calculator").style.display = "block";
+        errorDiv.textContent = "";
+      } else {
+        errorDiv.textContent = "Username atau password salah!";
+      }
+    }
+
+    let display = "";
+
+    function append(char) {
+      if (display === "0" && char !== ".") {
+        display = "";
+      }
+      display += char;
+      updateScreen();
+    }
+
+    function clearScreen() {
+      display = "";
+      updateScreen();
+    }
+
+    function backspace() {
+      display = display.slice(0, -1);
+      updateScreen();
+    }
+
+    function calculate() {
+      // Cek jika user mengetik "1+1"
+      if (display.trim() === "1+1") {
+        document.getElementById("calculator").style.display = "none";
+        document.getElementById("halamanSpesial").style.display = "block";
+        return;
+      }
+
+      try {
+        let result = eval(display);
+        display = result.toString();
+      } catch {
+        display = "Error";
+      }
+
+      updateScreen();
+    }
+
+    function updateScreen() {
+      document.getElementById("screen").textContent = display || "0";
+    }
+  </script>
+
+</body>
+</html>
